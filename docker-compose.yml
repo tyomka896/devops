@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  # ReactJS application
+  app:
+    build: ./app
+    container_name: devops-app
+    volumes:
+      - ./app/build:/app/build
+    command: /bin/sh -c "npm run build"
+
+  # Nginx server
+  server:
+    build: ./nginx
+    container_name: devops-server
+    ports:
+      - 8001:80
+    volumes:
+      - ./app/build:/usr/share/nginx/html
+    depends_on:
+      - app
