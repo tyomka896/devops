@@ -14,7 +14,7 @@ services:
     build: ./nginx
     container_name: devops-server
     ports:
-      - 8001:80
+      - ${APP_PORT:-8080}:80
     volumes:
       - ./app/build:/usr/share/nginx/html
     depends_on:
