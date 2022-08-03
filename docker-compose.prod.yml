@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  # Application
+  app:
+    image: devops-app-prod:1.0.0
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    container_name: devops-app-prod
+    ports:
+      - ${APP_PORT:-8080}:80
