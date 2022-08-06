@@ -23,13 +23,13 @@ cp .env.example .env
 Запуск:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 Размер образов:
 
 ```bash
-devops_app:latest       541MB
+devops_app:latest       193MB
 devops_server:latest    23.5MB
 ```
 
@@ -38,11 +38,11 @@ devops_server:latest    23.5MB
 Запуск:
 
 ```bash
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.yml up -d --build
 ```
 
 Размер образов:
 
 ```bash
-devops_server:latest    24.2MB
+devops_server:latest    23.5MB
 ```
