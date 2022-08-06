@@ -1,35 +1,33 @@
 - name: Build the project
   hosts: build
   become: yes
-  become_user: "{{ user | default('root') }}"
   tasks:
   - name: Install git package
     apt:
       name: git
       state: present
 
-  - name: Remove existing build folder (optional)
-    file:
-      path: ~/project
-      state: absent
-    when: remove is defined and remove == 'yes'
-
   - name: Clone project from GitHub
     git:
       repo: https://github.com/tyomka896/devops
-      dest: ~/project
+      dest: /tmp/project
       version: 07-docker-compose
 
   - name: Build project with docker compose
     shell:
       cmd: "docker-compose up -d --build"
-      chdir: ~/project
+      chdir: /tmp/project
 
   - name: Copy build to local temporary folder
     synchronize:
-      src: ~/project/app/build/
-      dest: ./builded
+      src: /tmp/project/app/build/
+      dest: ./_build
       mode: pull
+
+  - name: Remove temporary project folder
+    file:
+      path: /tmp/project
+      state: absent
 
 - name: Deploy the project
   hosts: deploy
@@ -47,5 +45,15 @@
 
   - name: Copy build to the server
     synchronize:
-      src: ./builded/
+      src: ./_build/
       dest: /var/www/html
+
+- name: Local machine
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: Clear temporary build folder (optional)
+    file:
+      path: ./_build/
+      state: absent
+    when: clear is defined and clear == 'yes'
