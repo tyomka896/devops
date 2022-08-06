@@ -1,0 +1,51 @@
+- name: Build the project
+  hosts: build
+  become: yes
+  become_user: "{{ user | default('root') }}"
+  tasks:
+  - name: Install git package
+    apt:
+      name: git
+      state: present
+
+  - name: Remove existing build folder (optional)
+    file:
+      path: ~/project
+      state: absent
+    when: remove is defined and remove == 'yes'
+
+  - name: Clone project from GitHub
+    git:
+      repo: https://github.com/tyomka896/devops
+      dest: ~/project
+      version: 07-docker-compose
+
+  - name: Build project with docker compose
+    shell:
+      cmd: "docker-compose up -d --build"
+      chdir: ~/project
+
+  - name: Copy build to local temporary folder
+    synchronize:
+      src: ~/project/app/build/
+      dest: ./builded
+      mode: pull
+
+- name: Deploy the project
+  hosts: deploy
+  become: yes
+  tasks:
+  - name: Install nginx package
+    apt:
+      name: nginx
+      state: present
+
+  - name: Is nginx started
+    service:
+      name: nginx
+      state: started
+
+  - name: Copy build to the server
+    synchronize:
+      src: ./builded/
+      dest: /var/www/html
