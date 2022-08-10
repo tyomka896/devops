@@ -1,0 +1,6 @@
+---
+# handlers file for git
+- name: Is Git started
+  service:
+    name: git
+    state: started

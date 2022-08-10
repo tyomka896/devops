@@ -1,0 +1,3 @@
+---
+# defaults file for deploy
+temp_project_path: /tmp/_git-project

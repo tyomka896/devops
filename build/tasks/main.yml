@@ -1,0 +1,21 @@
+---
+# tasks file for build
+- name: Clone project from GutHub
+  git:
+    repo: https://github.com/tyomka896/devops
+    dest: "{{ temp_project_path }}"
+    version: 07-docker-compose
+
+- name: Build project
+  community.docker.docker_compose:
+    project_src: "{{ temp_project_path }}"
+    files:
+      - docker-compose.yml
+
+- name: Copy build to local temporary folder
+  synchronize:
+    src: "{{ temp_project_path }}/app/build/"
+    dest: "{{ temp_project_path }}/"
+    mode: pull
+  notify:
+   - Clean up temporary

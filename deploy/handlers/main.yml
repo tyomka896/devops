@@ -1,0 +1,6 @@
+---
+# handlers file for deploy
+- name: Clean up temporary
+  file:
+    path: "{{ temp_project_path }}"
+    state: absent

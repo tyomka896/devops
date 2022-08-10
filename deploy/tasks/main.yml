@@ -1,0 +1,8 @@
+---
+# tasks file for deploy
+- name: Copy project build to the server
+  synchronize:
+    src: "{{ temp_project_path }}/"
+    dest: /var/www/html
+  notify:
+   - Clean up temporary

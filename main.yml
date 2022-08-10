@@ -1,0 +1,14 @@
+- name: Build the project
+  hosts: build
+  become: yes
+  roles:
+    - git
+    - docker
+    - build
+
+- name: Deploy the project
+  hosts: deploy
+  become: yes
+  roles:
+    - nginx
+    - deploy
